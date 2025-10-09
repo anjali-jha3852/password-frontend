@@ -11,7 +11,7 @@ export default function DashboardPage() {
   const [title, setTitle] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [notes, setNotes] = useState(""); // 📝 Notes field
+  const [notes, setNotes] = useState(""); 
   const [search, setSearch] = useState("");
   const [length, setLength] = useState(12);
   const [includeNumbers, setIncludeNumbers] = useState(true);
@@ -19,11 +19,11 @@ export default function DashboardPage() {
   const [excludeSimilar, setExcludeSimilar] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dark, setDark] = useState(false); // 🌗 Theme toggle
+  const [dark, setDark] = useState(false); 
 
   const userEmail = typeof window !== "undefined" ? localStorage.getItem("userEmail") : "";
 
-  // 🌗 Load saved theme
+
   useEffect(() => {
     const saved = localStorage.getItem("theme") === "dark";
     setDark(saved);
@@ -37,7 +37,7 @@ export default function DashboardPage() {
     localStorage.setItem("theme", newTheme ? "dark" : "light");
   };
 
-  // ✅ Fetch vault items
+
   const fetchVaultItems = async () => {
     setLoading(true);
     try {
@@ -62,7 +62,7 @@ export default function DashboardPage() {
     fetchVaultItems();
   }, []);
 
-  // ✨ Password Generator
+  
   const generatePassword = () => {
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     if (includeNumbers) chars += "0123456789";
@@ -76,7 +76,7 @@ export default function DashboardPage() {
     setPassword(pwd);
   };
 
-  // ✉️ Add / Update vault item
+  
   const handleAddOrUpdate = async (e) => {
     e.preventDefault();
     if (!title || !username || !password) return alert("All fields required");
@@ -85,39 +85,39 @@ export default function DashboardPage() {
 
     try {
       if (editingId) {
-        // update
+        
         const res = await api.put(`/vault/${editingId}`, {
           title,
           username,
           password: encryptedPassword,
-          notes, // 📝 include notes
+          notes, 
         });
         setVaultItems(vaultItems.map((v) => (v._id === editingId ? res.data : v)));
         alert("Vault item updated!");
         setEditingId(null);
       } else {
-        // add new
+        
         const res = await api.post("/vault", {
           title,
           username,
           password: encryptedPassword,
-          notes, // 📝 include notes
+          notes, 
         });
         setVaultItems([...vaultItems, res.data]);
         alert("Vault item added!");
       }
 
-      // reset form
+      
       setTitle("");
       setUsername("");
       setPassword("");
-      setNotes(""); // reset notes
+      setNotes(""); 
     } catch (err) {
       alert(err.response?.data?.message || "Failed to save vault");
     }
   };
 
-  // 🗑️ Delete vault item
+  
   const handleDelete = async (id) => {
     if (!confirm("Are you sure you want to delete this item?")) return;
     try {
@@ -129,30 +129,30 @@ export default function DashboardPage() {
     }
   };
 
-  // ✏️ Edit vault item
+  
   const handleEdit = (item) => {
     const decrypted = CryptoJS.AES.decrypt(item.password, userEmail).toString(CryptoJS.enc.Utf8);
     setTitle(item.title);
     setUsername(item.username);
     setPassword(decrypted);
-    setNotes(item.notes || ""); // 📝 load notes if present
+    setNotes(item.notes || ""); 
     setEditingId(item._id);
   };
 
-  // 📋 Copy password with auto-clear
+  
   const copyPassword = (encryptedPassword) => {
     const decrypted = CryptoJS.AES.decrypt(encryptedPassword, userEmail).toString(CryptoJS.enc.Utf8);
     navigator.clipboard.writeText(decrypted);
     alert("Password copied to clipboard!");
 
-    // 🧹 Auto-clear clipboard after 10 seconds
+    
     setTimeout(() => {
       navigator.clipboard.writeText("");
       console.log("Clipboard cleared");
     }, 10000);
   };
 
-  // 🔍 Filter vaults
+  
   const filteredVaults = vaultItems.filter(
     (item) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -161,7 +161,7 @@ export default function DashboardPage() {
 
   return (
     <div className={`min-h-screen p-6 transition-colors ${dark ? "bg-gray-900 text-white" : "bg-blue-400 text-white"}`}>
-      {/* 🌗 Theme Toggle */}
+      {/* Theme Toggle */}
       <button
         onClick={toggleTheme}
         className={`absolute top-4 right-4 px-3 py-1 rounded shadow ${
@@ -173,7 +173,7 @@ export default function DashboardPage() {
 
       <h1 className="text-2xl font-bold mb-6 text-center">Your Password Vault</h1>
 
-      {/* Add / Edit Vault Form */}
+   
       <form
         onSubmit={handleAddOrUpdate}
         className={`p-6 rounded shadow-md mb-6 w-full max-w-lg mx-auto ${dark ? "bg-gray-800" : "bg-black"} text-white`}
@@ -200,7 +200,7 @@ export default function DashboardPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {/* 📝 Notes field */}
+     
         <textarea
           placeholder="Notes (optional)"
           className="border p-2 w-full mb-3 rounded text-white"
@@ -208,7 +208,7 @@ export default function DashboardPage() {
           onChange={(e) => setNotes(e.target.value)}
         ></textarea>
 
-        {/* Generator Options */}
+      
         <div className={`p-3 rounded border mb-3 ${dark ? "bg-gray-700 text-white" : "bg-red-400 text-black"}`}>
           <label className="block text-sm mb-2 font-medium">Generate Password</label>
           <div className="mb-2">
@@ -262,7 +262,7 @@ export default function DashboardPage() {
         </button>
       </form>
 
-      {/* Search + Refresh */}
+    
       <div className="max-w-lg mx-auto mb-4 flex gap-2">
         <input
           type="text"
@@ -279,7 +279,6 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      {/* Vault List */}
       <div className={`max-w-lg mx-auto p-4 rounded shadow ${dark ? "bg-gray-800 text-white" : "bg-black text-white"}`}>
         <h2 className="text-lg font-semibold mb-3">Saved Vaults</h2>
         {loading ? (

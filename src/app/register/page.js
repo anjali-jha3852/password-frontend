@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../../utils/api";
-import CryptoJS from "crypto-js"; // for encryption if needed later
+import CryptoJS from "crypto-js"; 
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const [includeSymbols, setIncludeSymbols] = useState(true);
   const [excludeSimilar, setExcludeSimilar] = useState(true);
 
-  // ✨ Password Generator Function
+ 
   const generatePassword = () => {
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     if (includeNumbers) chars += "0123456789";
@@ -31,12 +31,11 @@ export default function RegisterPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      // 🔐 You can encrypt password locally if needed for vault usage
-      // const encrypted = CryptoJS.AES.encrypt(password, email).toString();
+      
 
       const res = await api.post("/auth/register", { email, password });
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userEmail", email); // save key for vault encryption
+      localStorage.setItem("userEmail", email); 
       router.push("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
@@ -60,7 +59,7 @@ export default function RegisterPage() {
           required
         />
 
-        {/* Password Input + Generator */}
+        
         <div className="mb-4">
           <input
             type="text"
@@ -71,7 +70,7 @@ export default function RegisterPage() {
             required
           />
 
-          {/* Password Generator Controls */}
+         
           <div className="bg-amber-200 p-3 rounded border">
             <label className="block text-sm mb-2 font-medium">Generate Password</label>
 
