@@ -1,17 +1,16 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "https://password-backend-j5ol.onrender.com",
-});
+const baseURL =
+  typeof window !== "undefined" && window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://password-backend-j5ol.onrender.com";
+
+const api = axios.create({ baseURL });
 
 api.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token = localStorage.getItem("token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
+  const token = localStorage.getItem("token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 });
 
-export default api;  
+export default api;

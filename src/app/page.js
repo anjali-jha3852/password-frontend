@@ -12,9 +12,14 @@ export default function LoginPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/auth/login", { email, password });
+      // Use /api/auth/login to match backend route
+      const res = await api.post("/api/auth/login", { email, password });
+
+      // Save token and email locally
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userEmail", email); 
+      localStorage.setItem("userEmail", email);
+
+      // Redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
@@ -64,4 +69,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

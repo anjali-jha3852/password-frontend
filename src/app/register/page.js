@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const [includeSymbols, setIncludeSymbols] = useState(true);
   const [excludeSimilar, setExcludeSimilar] = useState(true);
 
- 
+  // Password Generator
   const generatePassword = () => {
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     if (includeNumbers) chars += "0123456789";
@@ -28,14 +28,18 @@ export default function RegisterPage() {
     setPassword(pwd);
   };
 
+  // Register Handler
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      
+      // Use /api/auth/register to match backend route
+      const res = await api.post("/api/auth/register", { email, password });
 
-      const res = await api.post("/auth/register", { email, password });
+      // Save token and email locally
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userEmail", email); 
+      localStorage.setItem("userEmail", email);
+
+      // Redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
       alert(err.response?.data?.message || "Registration failed");
@@ -59,7 +63,6 @@ export default function RegisterPage() {
           required
         />
 
-        
         <div className="mb-4">
           <input
             type="text"
@@ -70,7 +73,6 @@ export default function RegisterPage() {
             required
           />
 
-         
           <div className="bg-amber-200 p-3 rounded border">
             <label className="block text-sm mb-2 font-medium">Generate Password</label>
 
